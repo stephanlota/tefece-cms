@@ -27,7 +27,7 @@ $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
-$cfg['Servers'][$i]['host'] = 'database-1.cwru3rwfouqv.eu-west-3.rds.amazonaws.com';
+$cfg['Servers'][$i]['host'] = 'myrdsinstance.cwru3rwfouqv.eu-west-3.rds.amazonaws.com';
 $cfg['Servers'][$i]['port'] = '3306';
 $cfg['Servers'][$i]['user'] = '';
 $cfg['Servers'][$i]['AllowNoPassword'] = false ;

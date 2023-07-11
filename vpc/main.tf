@@ -136,7 +136,7 @@ resource "aws_instance" "php-my-admin" {
 
 
   vpc_security_group_ids = [
-    aws_security_group.bastion-sg.id, "sg-0335e0801bea3b628"
+    aws_security_group.bastion-sg.id, aws_security_group.ec2_rds_sg.id
   ]
   root_block_device {
     delete_on_termination = true
@@ -157,12 +157,67 @@ resource "aws_instance" "php-my-admin" {
 output "ec2instance_public_ip" {
   value = { for k, v in aws_instance.php-my-admin : k => v.public_ip }
 }
-#
-#data "template_file" "data" {
-#  for_each = fileset("${path.module}/data", "**/*")
-#  template = "${file("${path.module}/data/${each.value}")}"
-#  vars = {
-#    bucket_id  = aws_instance.php-my-admin.id
-#    bucket_arn = aws_instance.php-my-admin.arn
-#  }
-#}
+
+#create a security group for RDS Database Instance
+resource "aws_security_group" "ec2_rds_sg" {
+  name   = "ec2_rds_sg"
+  vpc_id = aws_vpc.tfc-web-test-vpc.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+#create a security group for RDS Database Instance
+resource "aws_security_group" "rds_ec2_sg" {
+  name   = "rds_ec2_sg"
+  vpc_id = aws_vpc.tfc-web-test-vpc.id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+resource "aws_db_subnet_group" "db_private_subnets_group" {
+  name       = "db_private_subnets_group"
+  subnet_ids = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id, aws_subnet.private_subnets[2].id]
+
+  tags = {
+    Name = "My DB private subnets group"
+  }
+}
+
+#create a RDS Database Instance
+resource "aws_db_instance" "myinstance" {
+  engine                 = "mysql"
+  identifier             = "myrdsinstance"
+  allocated_storage      = 20
+  engine_version         = "5.7"
+  instance_class         = "db.t3.micro"
+  username               = "myrdsuser"
+  password               = "myrdspassword"
+  parameter_group_name   = "default.mysql5.7"
+  vpc_security_group_ids = ["${aws_security_group.rds_ec2_sg.id}"]
+  skip_final_snapshot    = true
+  publicly_accessible    = true
+  db_subnet_group_name   = aws_db_subnet_group.db_private_subnets_group.name
+}

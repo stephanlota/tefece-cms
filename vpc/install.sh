@@ -2,7 +2,10 @@
 
 sudo yum update -y
 sudo yum install -y httpd.x86_64
-sudo chown -R $USER /var/www/html
+sudo chown -R $USER /var/www/
+
+sudo mkdir /var/www/html/phpmyadmin/tmp/
+sudo 777 /var/www/html/phpmyadmin/tmp/
 
 wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz
 sudo tar -xvf phpMyAdmin-5.2.1-all-languages.tar.gz -C /var/www/html
@@ -10,7 +13,7 @@ sudo mv /var/www/html/phpMyAdmin-5.2.1-all-languages /var/www/html/phpmyadmin
 
 sudo yum install -y httpd.x86_64
 
-sudo yum clean metadata && sudo yum install -y php-cli php-pdo php-fpm php-json php-mysqlnd
+sudo yum clean metadata && sudo yum install -y php-cli php-pdo php-fpm php-json php-mysqlnd php-mbstring
 
 sudo systemctl enable httpd.service
 sudo systemctl restart httpd.service
