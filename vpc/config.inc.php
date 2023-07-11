@@ -26,6 +26,7 @@ $i = 0;
 $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['blowfish_secret'] = sodium_hex2bin('f16ce59f45714194371b48fe362072dc3b019da7861558cd4ad29e4d6fb13851');
 /* Server parameters */
 $cfg['Servers'][$i]['host'] = 'myrdsinstance.cwru3rwfouqv.eu-west-3.rds.amazonaws.com';
 $cfg['Servers'][$i]['port'] = '3306';
