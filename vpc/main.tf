@@ -100,6 +100,14 @@ resource "aws_security_group" "bastion-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    // To Allow Port 443 Transport
+  ingress {
+    from_port   = 443
+    protocol    = "tcp"
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
