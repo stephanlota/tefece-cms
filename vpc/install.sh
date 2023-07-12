@@ -1,7 +1,6 @@
 #! /bin/bash
 
 sudo yum update -y
-sudo yum install -y httpd.x86_64
 sudo chown -R $USER /var/www/
 
 wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz

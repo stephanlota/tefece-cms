@@ -198,7 +198,7 @@ resource "aws_security_group" "rds_ec2_sg" {
 
 
 resource "aws_db_subnet_group" "db_private_subnets_group" {
-  name       = "db_private_subnets_group"
+  name = "db_private_subnets_group"
   subnet_ids = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id, aws_subnet.private_subnets[2].id]
 
   tags = {
